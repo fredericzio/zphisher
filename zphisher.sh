@@ -586,7 +586,7 @@ tunnel_menu() {
 		${RED}[${WHITE}01${RED}]${BLUE} Localhost
 		${RED}[${WHITE}02${RED}]${BLUE} Cloudflared  ${RED}[${CYAN}Auto Detects${RED}]
 		${RED}[${WHITE}03${RED}]${BLUE} LocalXpose   ${RED}[${CYAN}NEW! Max 15Min${RED}]
-		${RED}[${WHITE}03${RED}]${BLUE} Ngrok   ${BLUE}]
+		${RED}[${WHITE}04${RED}]${BLUE} Ngrok   ${BLUE}]
 
 	EOF
 
